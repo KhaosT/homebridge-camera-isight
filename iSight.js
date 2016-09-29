@@ -62,6 +62,12 @@ function iSight(hap) {
   this._createStreamControllers(2, options); 
 }
 
+iSight.prototype.handleCloseConnection = function(connectionID) {
+  this.streamControllers.forEach(function(controller) {
+    controller.handleCloseConnection(connectionID);
+  });
+}
+
 iSight.prototype.handleSnapshotRequest = function(request, callback) {
   try {
       fs.unlinkSync("/tmp/0F0E480E-135D-4D11-86FC-B1C0C3ACA6FD.jpg");

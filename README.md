@@ -2,6 +2,8 @@
 
 iSight camera plugin for [Homebridge](https://github.com/nfarina/homebridge)
 
+** This plugin only works on macOS **
+
 ## Installation
 
 1. Install ffmpeg on your Mac

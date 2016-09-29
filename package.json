@@ -1,7 +1,7 @@
 {
   "name": "homebridge-camera-isight",
-  "version": "0.0.1",
-  "description": "Sight camera plugin for homebridge: https://github.com/nfarina/homebridge",
+  "version": "0.0.2",
+  "description": "iSight camera plugin for homebridge: https://github.com/nfarina/homebridge",
   "license": "ISC",
   "keywords": [
     "homebridge-plugin"
@@ -14,8 +14,8 @@
     "url": "http://github.com/KhaosT/homebridge-camera-isight/issues"
   },
   "engines": {
-    "node": ">=4.3.2",
-    "homebridge": ">=0.4.0"
+    "node": ">=5.0.0",
+    "homebridge": ">=0.4.5"
   },
   "dependencies": {
     "imagesnapjs": "^0.0.7",
