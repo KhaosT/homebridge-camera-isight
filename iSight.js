@@ -165,7 +165,7 @@ iSight.prototype.handleStreamRequest = function(request) {
       if (sessionInfo) {
         var width = 1280;
         var height = 720;
-        var fps = 30;
+        var fps = 25;
         var bitrate = 300;
 
         let videoInfo = request["video"];
@@ -185,8 +185,8 @@ iSight.prototype.handleStreamRequest = function(request) {
         let targetVideoPort = sessionInfo["video_port"];
         let videoKey = sessionInfo["video_srtp"];
 
-        let ffmpegCommand = '-re -f avfoundation -r 30 -i 0:0 -threads 0 -vcodec libx264 -an -pix_fmt yuv420p -r '+ fps +' -f rawvideo -tune zerolatency -vf scale='+ width +':'+ height +' -b:v '+ bitrate +'k -bufsize '+ bitrate +'k -payload_type 99 -ssrc 1 -f rtp -srtp_out_suite AES_CM_128_HMAC_SHA1_80 -srtp_out_params '+videoKey.toString('base64')+' srtp://'+targetAddress+':'+targetVideoPort+'?rtcpport='+targetVideoPort+'&localrtcpport='+targetVideoPort+'&pkt_size=1378';
-        console.log(ffmpegCommand);
+        let ffmpegCommand = '-re -f avfoundation -r '+fps+' -i 0:0 -threads 0 -vcodec libx264 -an -pix_fmt yuv420p -r '+ fps +' -f rawvideo -tune zerolatency -vf scale='+ width +':'+ height +' -b:v '+ bitrate +'k -bufsize '+ bitrate +'k -payload_type 99 -ssrc 1 -f rtp -srtp_out_suite AES_CM_128_HMAC_SHA1_80 -srtp_out_params '+videoKey.toString('base64')+' srtp://'+targetAddress+':'+targetVideoPort+'?rtcpport='+targetVideoPort+'&localrtcpport='+targetVideoPort+'&pkt_size=1378';
+        console.log("ffmpeg", ffmpegCommand);
         let ffmpeg = spawn('ffmpeg', ffmpegCommand.split(' '), {env: process.env});
         this.ongoingSessions[sessionIdentifier] = ffmpeg;
       }
