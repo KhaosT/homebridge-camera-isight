@@ -188,6 +188,12 @@ iSight.prototype.handleStreamRequest = function(request) {
         let ffmpegCommand = '-re -f avfoundation -r '+fps+' -i 0:0 -threads 0 -vcodec libx264 -an -pix_fmt yuv420p -r '+ fps +' -f rawvideo -tune zerolatency -vf scale='+ width +':'+ height +' -b:v '+ bitrate +'k -bufsize '+ bitrate +'k -payload_type 99 -ssrc 1 -f rtp -srtp_out_suite AES_CM_128_HMAC_SHA1_80 -srtp_out_params '+videoKey.toString('base64')+' srtp://'+targetAddress+':'+targetVideoPort+'?rtcpport='+targetVideoPort+'&localrtcpport='+targetVideoPort+'&pkt_size=1378';
         console.log("ffmpeg", ffmpegCommand);
         let ffmpeg = spawn('ffmpeg', ffmpegCommand.split(' '), {env: process.env});
+        ffmpeg.stderr.on('data', function(data) {
+            console.error('stderr: ' + data);
+        });
+        ffmpeg.on('close', function(code) {
+            console.log('closing code: ' + code);
+        });
         this.ongoingSessions[sessionIdentifier] = ffmpeg;
       }
 
