@@ -20,5 +20,9 @@
   "dependencies": {
     "imagesnapjs": "^0.0.7",
     "ip": "^1.1.3"
+  },
+  "scripts": {
+    "start": "homebridge --plugin-path ./",
+    "debug": "DEBUG=* homebridge --debug --plugin-path ./"
   }
 }
