@@ -14,6 +14,7 @@ function iSightPlatform(log, config, api) {
   var self = this;
 
   self.log = log;
+  self.config = config;
 
   if (api) {
     self.api = api;
@@ -32,12 +33,14 @@ iSightPlatform.prototype.configureAccessory = function(accessory) {
 
 iSightPlatform.prototype.didFinishLaunching = function() {
   var self = this;
-  var name = "iSight Camera";
-  var uuid = UUIDGen.generate(name);
+  if(self.config) {
+    var name = "iSight Camera" || self.config.name;
+    var uuid = UUIDGen.generate(name);
 
-  var cameraAccessory = new Accessory(name, uuid, hap.Accessory.Categories.CAMERA);
-  var cameraSource = new iSight(hap);
-  cameraAccessory.configureCameraSource(cameraSource);
+    var cameraAccessory = new Accessory(name, uuid, hap.Accessory.Categories.CAMERA);
+    var cameraSource = new iSight(hap, self.config);
+    cameraAccessory.configureCameraSource(cameraSource);
 
-  self.api.publishCameraAccessories("Camera-iSight", [cameraAccessory]);
+    self.api.publishCameraAccessories("Camera-iSight", [cameraAccessory]);
+  }
 }
