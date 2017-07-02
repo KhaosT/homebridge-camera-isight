@@ -1,6 +1,6 @@
 {
   "name": "homebridge-camera-isight",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "iSight camera plugin for homebridge: https://github.com/nfarina/homebridge",
   "license": "ISC",
   "keywords": [
