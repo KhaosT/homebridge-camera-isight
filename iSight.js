@@ -61,7 +61,7 @@ function iSight(hap, config) {
   }
 
   this.createCameraControlService();
-  this._createStreamControllers(2, options); 
+  this._createStreamControllers(2, options);
 }
 
 iSight.prototype.handleCloseConnection = function(connectionID) {
@@ -78,7 +78,7 @@ iSight.prototype.handleSnapshotRequest = function(request, callback) {
       debug(err);
     }
   }
-  
+
   imagesnapjs.capture('/tmp/0F0E480E-135D-4D11-86FC-B1C0C3ACA6FD.jpg', function(err) {
     if (!err) {
       var snapshot = fs.readFileSync('/tmp/0F0E480E-135D-4D11-86FC-B1C0C3ACA6FD.jpg');
@@ -116,7 +116,7 @@ iSight.prototype.prepareStream = function(request, callback) {
 
     sessionInfo["video_port"] = targetPort;
     sessionInfo["video_srtp"] = Buffer.concat([srtp_key, srtp_salt]);
-    sessionInfo["video_ssrc"] = 1; 
+    sessionInfo["video_ssrc"] = 1;
   }
 
   let audioInfo = request["audio"];
@@ -136,7 +136,7 @@ iSight.prototype.prepareStream = function(request, callback) {
 
     sessionInfo["audio_port"] = targetPort;
     sessionInfo["audio_srtp"] = Buffer.concat([srtp_key, srtp_salt]);
-    sessionInfo["audio_ssrc"] = 1; 
+    sessionInfo["audio_ssrc"] = 1;
   }
 
   let currentAddress = ip.address();
