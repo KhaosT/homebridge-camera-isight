@@ -19,3 +19,10 @@ iSight camera plugin for [Homebridge](https://github.com/nfarina/homebridge)
       "name": "iSight Camera",
       "fps": 30
     }
+
+Optional keys:
+
+- `video_device`: Video device name or index. eg: `"video_device": "FaceTime HD Camera (Built-in)"`
+- `audio_device`: Audio device name or index.
+
+You can get the device names and indices with `ffmpeg -f avfoundation -list_devices true -i ""`

@@ -61,7 +61,7 @@ function iSight(hap, config) {
   }
 
   this.createCameraControlService();
-  this._createStreamControllers(2, options); 
+  this._createStreamControllers(2, options);
 }
 
 iSight.prototype.handleCloseConnection = function(connectionID) {
@@ -78,8 +78,8 @@ iSight.prototype.handleSnapshotRequest = function(request, callback) {
       debug(err);
     }
   }
-  
-  imagesnapjs.capture('/tmp/0F0E480E-135D-4D11-86FC-B1C0C3ACA6FD.jpg', function(err) {
+  let cliFlags = this.config.video_device ? ("-d '" + this.config.video_device + "'") : '';
+  imagesnapjs.capture('/tmp/0F0E480E-135D-4D11-86FC-B1C0C3ACA6FD.jpg', { cliflags: cliFlags }, function(err) {
     if (!err) {
       var snapshot = fs.readFileSync('/tmp/0F0E480E-135D-4D11-86FC-B1C0C3ACA6FD.jpg');
       callback(undefined, snapshot);
@@ -116,7 +116,7 @@ iSight.prototype.prepareStream = function(request, callback) {
 
     sessionInfo["video_port"] = targetPort;
     sessionInfo["video_srtp"] = Buffer.concat([srtp_key, srtp_salt]);
-    sessionInfo["video_ssrc"] = 1; 
+    sessionInfo["video_ssrc"] = 1;
   }
 
   let audioInfo = request["audio"];
@@ -136,7 +136,7 @@ iSight.prototype.prepareStream = function(request, callback) {
 
     sessionInfo["audio_port"] = targetPort;
     sessionInfo["audio_srtp"] = Buffer.concat([srtp_key, srtp_salt]);
-    sessionInfo["audio_ssrc"] = 1; 
+    sessionInfo["audio_ssrc"] = 1;
   }
 
   let currentAddress = ip.address();
@@ -187,9 +187,20 @@ iSight.prototype.handleStreamRequest = function(request) {
         let targetVideoPort = sessionInfo["video_port"];
         let videoKey = sessionInfo["video_srtp"];
 
-        let ffmpegCommand = '-re -f avfoundation -r '+this.config.fps+' -i 0:0 -threads 0 -vcodec libx264 -an -pix_fmt yuv420p -r '+ fps +' -f rawvideo -tune zerolatency -vf scale='+ width +':'+ height +' -b:v '+ bitrate +'k -bufsize '+ bitrate +'k -payload_type 99 -ssrc 1 -f rtp -srtp_out_suite AES_CM_128_HMAC_SHA1_80 -srtp_out_params '+videoKey.toString('base64')+' srtp://'+targetAddress+':'+targetVideoPort+'?rtcpport='+targetVideoPort+'&localrtcpport='+targetVideoPort+'&pkt_size=1378';
+        let ffmpegCommandStart = ['-re', '-f', 'avfoundation', '-r', '' + this.config.fps];
+        let ffmpegCommandEnd = ['-threads', '0', '-vcodec', 'libx264', '-an', '-pix_fmt', 'yuv420p', '-r', '' + fps,
+                                '-f', 'rawvideo', '-tune', 'zerolatency', '-vf',
+                                'scale=' + width + ':' + height,
+                                '-b:v', bitrate +'k',
+                                '-bufsize', bitrate +'k',
+                                '-payload_type', '99', '-ssrc', '1', '-f', 'rtp',
+                                '-srtp_out_suite', 'AES_CM_128_HMAC_SHA1_80',
+                                '-srtp_out_params', videoKey.toString('base64'),
+                                'srtp://' + targetAddress + ':' + targetVideoPort + '?rtcpport=' + targetVideoPort + '&localrtcpport=' + targetVideoPort + '&pkt_size=1378'];
+        let ffmpegInputDevice = (this.config.video_device || "0") + ":" + (this.config.audio_device || "0");
+        let ffmpegCommand = ffmpegCommandStart.concat(["-i", ffmpegInputDevice]).concat(ffmpegCommandEnd);
         console.log("ffmpeg", ffmpegCommand);
-        let ffmpeg = spawn('ffmpeg', ffmpegCommand.split(' '), {env: process.env});
+        let ffmpeg = spawn('ffmpeg', ffmpegCommand, {env: process.env});
         ffmpeg.stderr.on('data', function(data) {
             console.error('stderr: ' + data);
         });
