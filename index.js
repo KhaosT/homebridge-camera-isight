@@ -34,7 +34,7 @@ iSightPlatform.prototype.configureAccessory = function(accessory) {
 iSightPlatform.prototype.didFinishLaunching = function() {
   var self = this;
   if(self.config) {
-    var name = "iSight Camera" || self.config.name;
+    var name =  self.config.name || "iSight Camera";
     var uuid = UUIDGen.generate(name);
 
     var cameraAccessory = new Accessory(name, uuid, hap.Accessory.Categories.CAMERA);
