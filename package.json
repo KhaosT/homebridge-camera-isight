@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "imagesnapjs": "^0.0.7",
+    "ffmpeg-for-homebridge": "0.0.3",
     "ip": "^1.1.3"
   },
   "scripts": {
